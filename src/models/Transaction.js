@@ -32,7 +32,7 @@ const transactionSchema = new mongoose.Schema(
 );
 
 transactionSchema.index({ walletId: 1, createdAt: -1 });
-transactionSchema.index({ createdAt: -1 });
+transactionSchema.index({ walletId: 1, amount: -1 });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
 

@@ -16,6 +16,8 @@ const transactionValidation = {
       walletId: Joi.string().optional(),
       skip: Joi.number().integer().min(0).optional(),
       limit: Joi.number().integer().min(1).max(100).optional(),
+      sortBy: Joi.string().valid('date', 'amount').optional(),
+      sortOrder: Joi.string().valid('asc', 'desc').optional(),
     }),
   }),
 };

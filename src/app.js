@@ -12,13 +12,14 @@ const app = express();
 
 app.use(helmet());
 app.use(cors());
+app.options('*', cors());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize());
 app.use(morgan);
 
-app.use('/api', routes);
+app.use('/api/v1', routes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

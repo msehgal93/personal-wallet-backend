@@ -1,3 +1,4 @@
+const { HTTP_STATUS } = require('../utils/constants');
 const { AppError } = require('../utils/errors');
 
 const validate = (schema) => {
@@ -15,7 +16,8 @@ const validate = (schema) => {
     );
 
     if (error) {
-      // Handle validation error
+      const message = error.details?.map((d) => d.message).join(', ') || 'Validation error';
+      return next(new AppError(message, HTTP_STATUS.BAD_REQUEST));
     }
 
     if (value) {

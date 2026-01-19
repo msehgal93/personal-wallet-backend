@@ -173,10 +173,30 @@ Response:
 { "id": number, "balance": number, "transactionId": string, "name": string, "date": Date }
 ```
 
+Sample Request:
+```
+curl --request POST http://localhost:3000/api/v1/wallet/setup \
+--header "Content-Type: application/json" \
+--data '{
+  "name": "Mohit Wallet",
+  "balance": 10
+}'
+```
+
+Sample Response:
+```
+{
+  "id":"696defeb527b9a16e69a591b",
+  "balance":10,
+  "transactionId":"696defeb527b9a16e69a591d",
+  "name":"Mohit Wallet",
+  "date":"2026-01-19T08:48:43.275Z"
+}
+```
 ---
 
 #### Credit / Debit Transaction
-**POST /transact/:walletId**
+**POST /transaction/:walletId**
 
 Request:
 ```json
@@ -188,14 +208,71 @@ Response:
 { "balance": number, "transactionId": string }
 ```
 
+Sample Request:
+```
+curl --request POST http://localhost:3000/api/v1/transaction/696defeb527b9a16e69a591b \
+--header "Content-Type: application/json" \
+--data '{
+  "description": "Cashback",
+  "amount": 10
+}'
+```
+
+Sample Response:
+```
+{
+  "balance":25,
+  "amount":10,
+  "description":"Cashback",
+  "transactionId":"696dfbdae97b0037965c04e7",
+  "walletId":"696defeb527b9a16e69a591b",
+  "type":"CREDIT"
+}
+```
 ---
 
 #### Fetch Transactions
-**GET /transactions?walletId=&skip=&limit=**
+**GET /transaction?walletId=&skip=&limit=&sortBy=&sortOrder=**
 
 Response:
 ```json
 [ { "id": number, "walletId": string, "amount": number, "balance": number, "description": string, "date": Date, "type": "CREDIT | DEBIT" } ]
+```
+
+Sample Request:
+```
+curl --request GET "http://localhost:3000/api/v1/transaction?walletId=696defeb527b9a16e69a591b&skip=0&limit=10&sortBy=amount&sortOrder=asc" \
+--header "Content-Type: application/json"
+```
+
+Sample Response:
+```
+{
+  "data": [
+    {
+      "id": "696e2b29b92c8b436e367730",
+      "walletId": "696e2b28b92c8b436e367728",
+      "amount": 1,
+      "balance": 6,
+      "description": "Amount 1",
+      "date": "2026-01-19T13:01:29.824Z",
+      "type": "CREDIT"
+    },
+    {
+      "id": "696e2b2ab92c8b436e367734",
+      "walletId": "696e2b28b92c8b436e367728",
+      "amount": 3,
+      "balance": 9,
+      "description": "Amount 3",
+      "date": "2026-01-19T13:01:30.376Z",
+      "type": "CREDIT"
+    }
+  ],
+  "pagination": {
+    "skip": 1,
+    "limit": 50
+  }
+}
 ```
 
 ---
@@ -208,6 +285,21 @@ Response:
 { "id": number, "balance": number, "name": string, "date": Date }
 ```
 
+Sample Request:
+```
+curl --request GET http://localhost:3000/api/v1/wallet/696defeb527b9a16e69a591b \
+--header "Content-Type: application/json"
+```
+
+Sample Response:
+```
+{
+  "id":"696defeb527b9a16e69a591b",
+  "balance":10,
+  "name":"Mohit Wallet",
+  "date":"2026-01-19T08:48:43.275Z"
+}
+```
 ---
 
 ## 2.2 Database Schema
