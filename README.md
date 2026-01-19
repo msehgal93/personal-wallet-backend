@@ -18,6 +18,106 @@ Create high level specifications for Backend and Frontend of a Wallet Management
 - Tailwind CSS – rapid styling
 - Static hosting – low cost, fast delivery
 
+---
+
+## Technical Stack & Development Tools
+
+### Database & Data Modeling
+- **NoSQL Database**: MongoDB with object data modeling using Mongoose
+  - Schema definitions and validation
+  - Middleware support for pre/post hooks
+  - Built-in type casting and query building
+
+### Validation
+- **Request Data Validation**: Joi package
+  - Schema-based validation for request payloads
+  - Input sanitization and type checking
+  - Custom validation rules and error messages
+
+### Logging
+- **Winston**: Structured logging with multiple transports
+  - File and console logging
+  - Log levels (error, warn, info, debug)
+  - Log rotation and retention policies
+- **Morgan**: HTTP request logging middleware
+  - Request/response logging
+  - Custom log formats
+  - Performance monitoring
+
+### Testing
+- **Jest**: Unit and integration testing framework
+  - Test suites for API endpoints
+  - Mocking and test fixtures
+  - Coverage reporting
+  - Integration tests for database operations
+
+### Error Handling
+- **Centralized Error Handling**: Custom error handling mechanism
+  - Global error middleware
+  - Standardized error response format
+  - Error logging and tracking
+  - Custom error classes for different error types
+
+### Process Management
+- **PM2**: Advanced production process management
+  - Process clustering and load balancing
+  - Auto-restart on crashes
+  - Zero-downtime deployments
+  - Process monitoring and logging
+  - Environment-specific configurations
+
+### Environment Configuration
+- **dotenv**: Environment variable management
+  - `.env` file support for local development
+  - Environment-specific configurations
+- **cross-env**: Cross-platform environment variable setting
+  - Windows/Linux/Mac compatibility
+  - NPM script environment variable support
+
+### Security
+- **Helmet**: Security HTTP headers
+  - XSS protection
+  - Content Security Policy
+  - HTTP Strict Transport Security (HSTS)
+  - X-Frame-Options and other security headers
+- **Data Sanitization**: Request data sanitization against XSS and query injection
+  - Input sanitization middleware
+  - MongoDB injection prevention
+  - XSS attack prevention
+
+### CORS
+- **cors**: Cross-Origin Resource Sharing
+  - Configurable CORS policies
+  - Whitelist support for allowed origins
+  - Credentials and headers configuration
+
+### Compression
+- **compression**: Gzip compression middleware
+  - Response compression for improved performance
+  - Configurable compression levels
+  - Content-type filtering
+
+### Containerization
+- **Docker Support**: Containerized deployment
+  - Dockerfile for application containerization
+  - Docker Compose for local development
+  - Multi-stage builds for optimization
+
+### Code Quality
+- **ESLint**: JavaScript/TypeScript linting
+  - Code style enforcement
+  - Best practices validation
+  - Custom rule configurations
+- **Prettier**: Code formatting
+  - Consistent code style
+  - Automatic formatting on save
+  - Integration with ESLint
+
+### Editor Configuration
+- **EditorConfig**: Consistent editor configuration
+  - Cross-editor settings (indentation, line endings, charset)
+  - `.editorconfig` file for team consistency
+
 
 ## Architectural Characteristics
 
