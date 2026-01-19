@@ -1,10 +1,9 @@
 const database = require('../src/config/database');
 
 beforeAll(async () => {
-  // Setup test database
+  await database.connect();
 });
 
 afterAll(async () => {
-  // Cleanup test database
   await database.disconnect();
 });
