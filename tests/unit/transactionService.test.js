@@ -6,6 +6,7 @@ jest.mock('../../src/persistence', () => {
   const transactionPersistence = {
     create: jest.fn(),
     findByFilters: jest.fn(),
+    countByFilters: jest.fn(),
     findById: jest.fn(),
   };
   return { walletPersistence, transactionPersistence };
@@ -192,6 +193,26 @@ describe('TransactionService', () => {
           limit: 50,
         })
       );
+    });
+  });
+
+  describe('countTransactions', () => {
+    it('should return count for a walletId filter', async () => {
+      transactionPersistence.countByFilters.mockResolvedValue(12);
+
+      const count = await transactionService.countTransactions({ walletId: 'wallet-id' });
+
+      expect(transactionPersistence.countByFilters).toHaveBeenCalledWith({ walletId: 'wallet-id' });
+      expect(count).toBe(12);
+    });
+
+    it('should return count for empty filters', async () => {
+      transactionPersistence.countByFilters.mockResolvedValue(5);
+
+      const count = await transactionService.countTransactions({});
+
+      expect(transactionPersistence.countByFilters).toHaveBeenCalledWith({});
+      expect(count).toBe(5);
     });
   });
 

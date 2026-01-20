@@ -151,15 +151,11 @@ describe('Transaction API Integration Tests', () => {
         .query({ walletId, skip: 0, limit: 10, sortBy: 'amount', sortOrder: 'asc' });
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('data');
-      expect(res.body).toHaveProperty('pagination');
-      expect(res.body.data.length).toBeGreaterThanOrEqual(3);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThanOrEqual(3);
 
-      const returnedAmounts = res.body.data.map((t) => t.amount);
+      const returnedAmounts = res.body.map((t) => t.amount);
       expect(returnedAmounts).toEqual([...returnedAmounts].sort((a, b) => a - b));
-
-      expect(res.body.pagination.skip).toBe(0);
-      expect(res.body.pagination.limit).toBe(10);
     });
 
     it('should get transactions sorted by date descending (default)', async () => {
@@ -184,9 +180,10 @@ describe('Transaction API Integration Tests', () => {
         .query({ walletId, skip: 0, limit: 10, sortBy: 'date', sortOrder: 'desc' });
 
       expect(res.status).toBe(200);
-      expect(res.body.data.length).toBeGreaterThanOrEqual(3);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThanOrEqual(3);
       // Should be in descending order (newest first)
-      const dates = res.body.data.map((t) => new Date(t.date).getTime());
+      const dates = res.body.map((t) => new Date(t.date).getTime());
       expect(dates).toEqual([...dates].sort((a, b) => b - a));
     });
 
@@ -207,8 +204,9 @@ describe('Transaction API Integration Tests', () => {
         .query({ walletId, skip: 0, limit: 10, sortBy: 'amount', sortOrder: 'desc' });
 
       expect(res.status).toBe(200);
-      expect(res.body.data.length).toBeGreaterThanOrEqual(3);
-      const returnedAmounts = res.body.data.map((t) => t.amount);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThanOrEqual(3);
+      const returnedAmounts = res.body.map((t) => t.amount);
       expect(returnedAmounts).toEqual([...returnedAmounts].sort((a, b) => b - a));
     });
 
@@ -230,9 +228,8 @@ describe('Transaction API Integration Tests', () => {
         .query({ walletId, skip: 0, limit: 2 });
 
       expect(res1.status).toBe(200);
-      expect(res1.body.data.length).toBe(2);
-      expect(res1.body.pagination.skip).toBe(0);
-      expect(res1.body.pagination.limit).toBe(2);
+      expect(Array.isArray(res1.body)).toBe(true);
+      expect(res1.body.length).toBe(2);
 
       // Get next 2 transactions
       const res2 = await request(app)
@@ -240,9 +237,8 @@ describe('Transaction API Integration Tests', () => {
         .query({ walletId, skip: 2, limit: 2 });
 
       expect(res2.status).toBe(200);
-      expect(res2.body.data.length).toBe(2);
-      expect(res2.body.pagination.skip).toBe(2);
-      expect(res2.body.pagination.limit).toBe(2);
+      expect(Array.isArray(res2.body)).toBe(true);
+      expect(res2.body.length).toBe(2);
     });
 
     it('should filter transactions by walletId', async () => {
@@ -264,7 +260,12 @@ describe('Transaction API Integration Tests', () => {
         .query({ walletId: walletId1 });
 
       expect(res.status).toBe(200);
-      expect(res.body.data.every((t) => t.walletId === walletId1)).toBe(true);
+      expect(res.body).toHaveProperty('transactions');
+      expect(res.body).toHaveProperty('pagination');
+      expect(res.body.pagination).toHaveProperty('count');
+      expect(res.body.pagination.skip).toBe(0);
+      expect(res.body.pagination.limit).toBe(10);
+      expect(res.body.transactions.every((t) => t.walletId === walletId1)).toBe(true);
     });
 
     it('should return empty array when no transactions exist', async () => {
@@ -276,9 +277,12 @@ describe('Transaction API Integration Tests', () => {
         .query({ walletId });
 
       expect(res.status).toBe(200);
-      expect(res.body.data).toEqual([]);
+      expect(res.body).toHaveProperty('transactions');
+      expect(res.body).toHaveProperty('pagination');
+      expect(res.body.transactions).toEqual([]);
       expect(res.body.pagination.skip).toBe(0);
-      expect(res.body.pagination.limit).toBe(50);
+      expect(res.body.pagination.limit).toBe(10);
+      expect(res.body.pagination.count).toBe(0);
     });
 
     it('should validate invalid sortBy parameter', async () => {

@@ -27,15 +27,17 @@ class TransactionController {
 
   async getTransactions(req, res, next) {
     try {
-      const { walletId, skip, limit, sortBy, sortOrder } = req.query;
+      const { walletId, sortBy, sortOrder } = req.query;
+      const hasSkip = req.query.skip !== undefined;
+      const hasLimit = req.query.limit !== undefined;
+      const bothMissing = !hasSkip && !hasLimit;
+
+      const skip = hasSkip ? Number(req.query.skip) : 0;
+      const limit = hasLimit ? Number(req.query.limit) : bothMissing ? 10 : 10;
+
       const transactions = await transactionService.getTransactions(
         { walletId },
-        {
-          skip: skip ? Number(skip) : 0,
-          limit: limit ? Number(limit) : 50,
-          sortBy,
-          sortOrder,
-        }
+        { skip, limit, sortBy, sortOrder }
       );
 
       const mappedTransactions = transactions.map((txn) => ({
@@ -48,11 +50,18 @@ class TransactionController {
         type: txn.type,
       }));
 
+      if (!bothMissing) {
+        // If client is paginating (skip/limit provided), return only transactions array
+        return res.status(HTTP_STATUS.OK).json(mappedTransactions);
+      }
+
+      const count = await transactionService.countTransactions({ walletId });
       return res.status(HTTP_STATUS.OK).json({
-        data: mappedTransactions,
+        transactions: mappedTransactions,
         pagination: {
-          skip: skip ? Number(skip) : 0,
-          limit: limit ? Number(limit) : 50,
+          skip: 0,
+          limit: 10,
+          count,
         },
       });
     } catch (error) {
