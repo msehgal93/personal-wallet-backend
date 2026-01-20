@@ -18,6 +18,10 @@ class TransactionPersistenceMongo extends TransactionPersistence {
     });
   }
 
+  async countByFilters(filters = {}, options = {}) {
+    return Transaction.countDocuments(filters, { session: options.session });
+  }
+
   async findById(id, options = {}) {
     return Transaction.findById(id, null, { session: options.session });
   }

@@ -76,6 +76,14 @@ class TransactionService {
     return transactionPersistence.findByFilters(parsedFilters, { skip, limit, sort });
   }
 
+  async countTransactions(filters) {
+    const parsedFilters = {};
+    if (filters.walletId) {
+      parsedFilters.walletId = filters.walletId;
+    }
+    return transactionPersistence.countByFilters(parsedFilters);
+  }
+
   async getTransactionById(id) {
     const transaction = await transactionPersistence.findById(id);
     if (!transaction) {
