@@ -21,6 +21,10 @@ app.use(morgan);
 
 app.use('/api/v1', routes);
 
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 
